@@ -1,36 +1,33 @@
 package com.example.splabcorneanudenis;
 
-import com.example.splabcorneanudenis.book.*;
+import com.example.splabcorneanudenis.di.ClientComponent;
+import com.example.splabcorneanudenis.di.SingletonComponent;
+import com.example.splabcorneanudenis.di.TransientComponent;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class SPLabCorneanuDenisApplication {
 
     public static void main(String[] args) {
-        // SpringApplication.run(SPLabCorneanuDenisApplication.class, args);
+        ApplicationContext context =
+                SpringApplication.run(SPLabCorneanuDenisApplication.class, args);
 
-        Section cap1 = new Section("Capitolul 1");
+        System.out.println("=== DI demo in main ===");
 
-        Paragraph p1 = new Paragraph("Textul primului paragraf");
-        Paragraph p2 = new Paragraph("Al doilea paragraf");
-        Paragraph p3 = new Paragraph("Al treilea paragraf");
-        Paragraph p4 = new Paragraph("Al patrulea paragraf");
+        TransientComponent t1 = context.getBean(TransientComponent.class);
+        TransientComponent t2 = context.getBean(TransientComponent.class);
 
-        cap1.add(p1);
-        cap1.add(p2);
-        cap1.add(p3);
-        cap1.add(p4);
+        SingletonComponent s1 = context.getBean(SingletonComponent.class);
+        SingletonComponent s2 = context.getBean(SingletonComponent.class);
 
-        System.out.println("=== Printing WITHOUT alignment ===");
-        cap1.print();
+        ClientComponent client = context.getBean(ClientComponent.class);
 
-        // setăm strategiile de aliniere
-        p1.setAlignStrategy(new AlignCenter());
-        p2.setAlignStrategy(new AlignRight());
-        p3.setAlignStrategy(new AlignLeft());
-        // p4 rămâne fără strategy → se va printa default
-
-        System.out.println("\n=== Printing WITH alignment ===");
-        cap1.print();
+        System.out.println("t1: " + t1.operation());
+        System.out.println("t2: " + t2.operation());
+        System.out.println("s1: " + s1.operation());
+        System.out.println("s2: " + s2.operation());
+        System.out.println("client: " + client.operation());
     }
 }
