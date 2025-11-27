@@ -1,9 +1,11 @@
 package com.example.splabcorneanudenis.books;
 
+import com.example.splabcorneanudenis.book.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
@@ -16,34 +18,30 @@ public class BooksController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResource>> getAll() {
-        Command<List<BookResource>> cmd =
-                new GetAllBooksCommand(booksService);
+    public ResponseEntity<List<Book>> getAll() {
+        Command<List<Book>> cmd = new GetAllBooksCommand(booksService);
         return ResponseEntity.ok(cmd.execute());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookResource> getById(@PathVariable Long id) {
-        Command<java.util.Optional<BookResource>> cmd =
-                new GetBookByIdCommand(booksService, id);
+    public ResponseEntity<Book> getById(@PathVariable Long id) {
+        Command<Optional<Book>> cmd = new GetBookByIdCommand(booksService, id);
         return cmd.execute()
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<BookResource> create(@RequestBody BookResource book) {
-        Command<BookResource> cmd =
-                new CreateBookCommand(booksService, book);
-        BookResource created = cmd.execute();
+    public ResponseEntity<Book> create(@RequestBody Book book) {
+        Command<Book> cmd = new CreateBookCommand(booksService, book);
+        Book created = cmd.execute();
         return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResource> update(@PathVariable Long id,
-                                               @RequestBody BookResource book) {
-        Command<java.util.Optional<BookResource>> cmd =
-                new UpdateBookCommand(booksService, id, book);
+    public ResponseEntity<Book> update(@PathVariable Long id,
+                                       @RequestBody Book book) {
+        Command<Optional<Book>> cmd = new UpdateBookCommand(booksService, id, book);
         return cmd.execute()
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -51,13 +49,11 @@ public class BooksController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Command<Boolean> cmd =
-                new DeleteBookCommand(booksService, id);
+        Command<Boolean> cmd = new DeleteBookCommand(booksService, id);
         boolean deleted = cmd.execute();
         if (deleted) {
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }

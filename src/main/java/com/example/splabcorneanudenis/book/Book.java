@@ -1,10 +1,20 @@
 package com.example.splabcorneanudenis.book;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class Book extends Section {
 
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Author> authors = new ArrayList<>();
 
     public Book(String title) {
@@ -17,17 +27,14 @@ public class Book extends Section {
 
     @Override
     public void print() {
-        // titlul cărții
-        System.out.println(title);
+        System.out.println(getTitle());
 
-        // autorii
         System.out.println("Authors:");
         for (Author a : authors) {
             a.print();
         }
 
-        // conținutul (paragrafe, secțiuni etc.)
-        for (Element e : elements) {
+        for (Element e : getElements()) {
             e.print();
         }
     }

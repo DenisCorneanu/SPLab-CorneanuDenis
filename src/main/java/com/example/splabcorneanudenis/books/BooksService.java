@@ -1,47 +1,47 @@
 package com.example.splabcorneanudenis.books;
 
+import com.example.splabcorneanudenis.book.Book;
+import com.example.splabcorneanudenis.persistence.BooksRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BooksService {
 
-    private final Map<Long, BookResource> books = new HashMap<>();
-    private final AtomicLong idGenerator = new AtomicLong(0);
+    private final BooksRepository repo;
 
-    public BooksService() {
-        // date de test
-        create(new BookResource(null, "Noapte buna, copii!", "Radu Pavel Gheo"));
-        create(new BookResource(null, "Baltagul", "Mihail Sadoveanu"));
+    public BooksService(BooksRepository repo) {
+        this.repo = repo;
     }
 
-    public List<BookResource> findAll() {
-        return new ArrayList<>(books.values());
+    public List<Book> findAll() {
+        return repo.findAll();
     }
 
-    public Optional<BookResource> findById(Long id) {
-        return Optional.ofNullable(books.get(id));
+    public Optional<Book> findById(Long id) {
+        return repo.findById(id);
     }
 
-    public BookResource create(BookResource book) {
-        long id = idGenerator.incrementAndGet();
-        book.setId(id);
-        books.put(id, book);
-        return book;
+    public Book create(Book b) {
+        return repo.save(b);
     }
 
-    public Optional<BookResource> update(Long id, BookResource book) {
-        if (!books.containsKey(id)) {
-            return Optional.empty();
-        }
-        book.setId(id);
-        books.put(id, book);
-        return Optional.of(book);
+    public Optional<Book> update(Long id, Book data) {
+        // NU mai setăm id-ul manual, îl are deja entitatea din DB
+        return repo.findById(id).map(existing -> {
+            existing.setTitle(data.getTitle());
+            existing.setAuthors(data.getAuthors());
+            // dacă vrei, poți copia și alte câmpuri:
+            // existing.setElements(data.getElements());
+            return repo.save(existing);
+        });
     }
 
     public boolean delete(Long id) {
-        return books.remove(id) != null;
+        if (!repo.existsById(id)) return false;
+        repo.deleteById(id);
+        return true;
     }
 }

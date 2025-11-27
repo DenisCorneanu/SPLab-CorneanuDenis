@@ -1,14 +1,24 @@
 package com.example.splabcorneanudenis.book;
 
-public class Image implements Element {
+import jakarta.persistence.Entity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Image extends BaseElement {
+
     private String imageName;
 
-    public Image(String imageName) {
-        this.imageName = imageName;
+    public Image(String name) {
+        this.imageName = name;
     }
 
     @Override
     public void print() {
-        System.out.println("Image with name:" + imageName);
+        System.out.println("Image: " + imageName);
     }
 }

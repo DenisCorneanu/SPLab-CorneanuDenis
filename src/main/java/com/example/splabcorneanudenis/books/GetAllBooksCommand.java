@@ -1,8 +1,10 @@
 package com.example.splabcorneanudenis.books;
 
+import com.example.splabcorneanudenis.book.Book;
+
 import java.util.List;
 
-public class GetAllBooksCommand implements Command<List<BookResource>> {
+public class GetAllBooksCommand implements Command<List<Book>> {
 
     private final BooksService booksService;
 
@@ -11,7 +13,7 @@ public class GetAllBooksCommand implements Command<List<BookResource>> {
     }
 
     @Override
-    public List<BookResource> execute() {
+    public List<Book> execute() {
         return booksService.findAll();
     }
 }

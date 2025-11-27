@@ -1,23 +1,31 @@
 package com.example.splabcorneanudenis.book;
 
-public class Paragraph implements Element {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Paragraph extends BaseElement {
+
     private String text;
-    private AlignStrategy alignStrategy;   // 🔹 nou
+
+    @Transient
+    private AlignStrategy alignStrategy;
 
     public Paragraph(String text) {
         this.text = text;
     }
 
-    public void setAlignStrategy(AlignStrategy alignStrategy) {
-        this.alignStrategy = alignStrategy;
-    }
-
     @Override
     public void print() {
-        if (alignStrategy == null) {
+        if (alignStrategy == null)
             System.out.println("Paragraph: " + text);
-        } else {
+        else
             alignStrategy.render(text);
-        }
     }
 }

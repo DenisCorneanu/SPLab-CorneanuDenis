@@ -1,17 +1,19 @@
 package com.example.splabcorneanudenis.books;
 
-public class CreateBookCommand implements Command<BookResource> {
+import com.example.splabcorneanudenis.book.Book;
+
+public class CreateBookCommand implements Command<Book> {
 
     private final BooksService booksService;
-    private final BookResource book;
+    private final Book book;
 
-    public CreateBookCommand(BooksService booksService, BookResource book) {
+    public CreateBookCommand(BooksService booksService, Book book) {
         this.booksService = booksService;
         this.book = book;
     }
 
     @Override
-    public BookResource execute() {
+    public Book execute() {
         return booksService.create(book);
     }
 }
