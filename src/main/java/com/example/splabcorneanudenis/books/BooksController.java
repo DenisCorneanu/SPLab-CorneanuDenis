@@ -12,10 +12,14 @@ import java.util.Optional;
 public class BooksController {
 
     private final BooksService booksService;
+    private final AllBooksSubject allBooksSubject;
 
-    public BooksController(BooksService booksService) {
+    public BooksController(BooksService booksService,
+                           AllBooksSubject allBooksSubject) {
         this.booksService = booksService;
+        this.allBooksSubject = allBooksSubject;
     }
+
 
     @GetMapping
     public ResponseEntity<List<Book>> getAll() {
@@ -35,8 +39,13 @@ public class BooksController {
     public ResponseEntity<Book> create(@RequestBody Book book) {
         Command<Book> cmd = new CreateBookCommand(booksService, book);
         Book created = cmd.execute();
+
+        // 🔔 notificăm toți SSE observers despre cartea nouă
+        allBooksSubject.add(created);
+
         return ResponseEntity.ok(created);
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Book> update(@PathVariable Long id,
